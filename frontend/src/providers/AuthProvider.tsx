@@ -2,6 +2,7 @@ import { Loader } from 'lucide-react';
 import { useState, useEffect } from 'react'
 import { useAuth } from "@clerk/clerk-react";
 import { axiosInstance } from '../lib/axios';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 const updateApiToken = (token: string | null) => {
     if (token) {
@@ -12,8 +13,9 @@ const updateApiToken = (token: string | null) => {
     }
 }
 
-const AuthProvider = ({children}:{children: React.ReactNode}) => {
+const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { getToken } = useAuth();
+    const { checkAdminStatus } = useAuthStore();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -21,6 +23,9 @@ const AuthProvider = ({children}:{children: React.ReactNode}) => {
             try {
                 const token = await getToken();
                 updateApiToken(token);
+                if (token) {
+                    checkAdminStatus()
+                }
 
             } catch (error) {
                 updateApiToken(null);
@@ -36,7 +41,7 @@ const AuthProvider = ({children}:{children: React.ReactNode}) => {
 
     if (loading) return (
         <div className="h-screen w-full flex items-center justify-center">
-            <Loader className='size-8 text-emerald-500 animate-spin'/>
+            <Loader className='size-8 text-emerald-500 animate-spin' />
         </div>
     )
     return <>{children}</>

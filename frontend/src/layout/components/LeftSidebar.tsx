@@ -11,7 +11,7 @@ import { useMusicStore } from '@/stores/useMusicStore'
 
 const LeftSidebar = () => {
     const route = useLocation();
-    const { albums, isLoading, fetchAlbums, } = useMusicStore();
+    const { albums, isAlbumsLoading, fetchAlbums, } = useMusicStore();
 
     useEffect(() => {
         fetchAlbums()
@@ -56,15 +56,15 @@ const LeftSidebar = () => {
                 </div>
                 <ScrollArea className='h-[calc(100vh-300px)] '>
                     <div className='space-y-2'>
-                        {isLoading ? (
+                        {isAlbumsLoading ? (
                             <PlaylistSkeleton />
                         ) : (
                             albums.map((album) => (
-                                <Link to={`/album/${album._id}`} key={album._id} className={`flex items-center p-2 gap-3 group cursor-pointer hover:bg-zinc-800 rounded-md ${route.pathname === `/album/${album._id}` ? "bg-emerald-600" : ""}`}>
+                                <Link to={`/album/${album._id}`} key={album._id} className={`flex items-center p-2 gap-3 group cursor-pointer  rounded-md ${route.pathname === `/album/${album._id}` ? "bg-emerald-600 " : "hover:bg-emerald-600"}`}>
                                     <img src={album.imageUrl} alt={album.title} className='size-12 rounded-md flex-shrink-0 object-cover'/>
                                     <div className='flex-1 min-w-0 hidden md:block'>
                                         <p className='font-medium truncate'>{album.title}</p>
-                                        <p className='text-sm text-zinc-400 truncate'>
+                                        <p className={`text-sm group-hover:text-zinc-50 truncate text-zinc-300`}>
                                            Album • {album.artist}</p>
                                     </div>
                                 </Link>
