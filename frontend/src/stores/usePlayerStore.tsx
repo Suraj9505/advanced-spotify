@@ -30,6 +30,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
             currentIndex: get().currentIndex === -1 ? 0 : get().currentIndex
         })
     },
+
     playAlbum: (songs: Song[], startIndex = 0 ) => {
         if(songs.length === 0) return;
 
@@ -41,6 +42,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
             isPlaying: true,
         })
     },
+
     setCurrentSong: (song: Song | null) => {
         if(!song) return;
 
@@ -52,6 +54,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
             currentIndex: songIndex !== -1 ? songIndex : get().currentIndex,
         })
     },
+
     togglePlay: () => {
         const willStartPlaying = !get().isPlaying;
 
@@ -59,6 +62,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
             isPlaying: willStartPlaying
         })
     },
+
     playNext: () => {
         const { currentIndex, queue } = get();
         const nextIndex = currentIndex + 1;
@@ -91,9 +95,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
                 isPlaying: true,
             })
         } else {
-            // Todo: try adding the logic if there is no previous song then go to the last song of the queue
-            set({
-                currentSong: queue[queue.length - 1],})
+            // Todo: try adding the logic if there is no previous song then go to the first song of the queue
+            // no previous song
+            set({ isPlaying: false });
         }
     },
 
