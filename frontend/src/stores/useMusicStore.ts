@@ -9,7 +9,6 @@ interface MusicStore {
     stats: Stats;
     isAllSongsLoading: boolean;
     isStatsLoading: boolean;
-    isSongDeleteLoading: boolean;
     isSongsLoading: boolean;
     isAlbumsLoading: boolean;
     isMadeForYouLoading: boolean;
@@ -30,6 +29,8 @@ interface MusicStore {
     fetchSongs: () => Promise<void>;
     deleteSong: (id: string) => Promise<void>;
     deleteAlbum: (id: string) => Promise<void>;
+    addSong: (formData: any) => Promise<void>;
+    addAlbum: (formData: any) => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
@@ -48,6 +49,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
     isMadeForYouLoading: false,
     isFeaturedLoading: false,
     isSongDeleteLoading: false,
+    isAlbumDeleteLoading: false,
     isTrendingLoading: false,
     error: null,
     currentAlbum: null,
@@ -135,7 +137,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
             set({ stats: response.data });
 
         } catch (error:any) {
-            set({ error: error.message });
+            set({ error: error.response.data.message });
 
         } finally {
             set({ isStatsLoading: false });
@@ -150,7 +152,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
             set({ songs: response.data });
 
         } catch (error:any) {
-            set({ error: error.message });
+            set({ error: error.response.data.message });
 
         } finally {
             set({ isAllSongsLoading: false });
@@ -158,7 +160,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
     },
 
     deleteSong: async (id) => {
-        set({ isSongDeleteLoading: true, error: null });
+        set({  error: null });
         try {
              await axiosInstance.delete(`/admin/songs/${id}`);
 
@@ -170,15 +172,13 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
         } catch (error:any) {
             toast.error(error.message);
-            set({ error: error.message})
+            set({ error: error.response.data.message})
 
-        } finally {
-            set({ isSongDeleteLoading: false})
         }
     },
 
     deleteAlbum: async (id) => {
-        set({ error: null });
+        set({  error: null });
 
         try {
             await axiosInstance.delete(`/admin/albums/${id}`);
@@ -193,8 +193,48 @@ export const useMusicStore = create<MusicStore>((set) => ({
             toast.success("Album deleted successfully");
 
         } catch (error:any) {
-            set({error: error.message});
+            set({error: error.response.data.message});
             toast.error(error.message);
+        }
+    },
+
+    addSong: async (formData) => {
+        try {
+            const response = await axiosInstance.post("/admin/songs", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+
+            const newSong = response.data;
+            set((state) => ({
+                songs: [newSong, ...state.songs].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+            }));
+
+            toast.success("Song added successfully!");
+
+        } catch (error:any) {
+            toast.error(error.response.data.message);
+        }
+    },
+
+    addAlbum: async (formData) => {
+        try {
+            const response = await axiosInstance.post("/admin/albums", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+
+            const newAlbum = response.data;
+            set((state) => ({
+                albums: [newAlbum, ...state.albums].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+            }));
+
+            toast.success("Album added successfully!");
+
+        } catch (error:any) {
+            toast.error("Error adding Album", error);
         }
     }
 }));

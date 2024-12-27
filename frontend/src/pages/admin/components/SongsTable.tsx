@@ -8,9 +8,9 @@ const SongsTable = () => {
 
     const { songs, isAllSongsLoading, error, deleteSong, fetchStats } = useMusicStore();
 
-    useEffect(() => {
-        fetchStats();
-    }, [songs])
+    // useEffect(() => {
+    //     fetchStats();
+    // }, [songs])
 
     if (isAllSongsLoading ) {
         return (

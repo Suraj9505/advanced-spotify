@@ -12,13 +12,17 @@ const AdminPage = () => {
 
     const { isAdmin, isLoading } = useAuthStore();
 
-    const { fetchStats, fetchAlbums, fetchSongs } = useMusicStore();
+    const { fetchStats, fetchAlbums, fetchSongs, songs, albums } = useMusicStore();
+
+    useEffect(()=> {
+        fetchStats();
+    }, [songs, fetchStats, albums])
 
     useEffect(() => {
-        fetchStats();
+
         fetchAlbums();
         fetchSongs();
-    }, [fetchStats, fetchSongs, fetchAlbums]);
+    }, [fetchSongs, fetchAlbums]);
 
 
     if (!isAdmin && !isLoading) return <div className="h-screen flex items-center justify-center text-2xl">Sorry 😞, You are not authorized</div>;

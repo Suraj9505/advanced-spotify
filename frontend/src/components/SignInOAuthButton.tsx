@@ -1,8 +1,10 @@
 import { useSignIn } from '@clerk/clerk-react';
 import { Button } from './ui/button';
+import { useChatStore } from '@/stores/useChatStore';
 
 const SignInOAuthButton = () => {
     const { signIn, isLoaded } = useSignIn();
+    const { disconnectSocket } = useChatStore();
 
     if(!isLoaded){
         return null;
@@ -14,6 +16,8 @@ const SignInOAuthButton = () => {
             redirectUrl: "/sso-callback",
             redirectUrlComplete: "/auth-callback"
         })
+
+        disconnectSocket();
     }
 
     return (

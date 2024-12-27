@@ -26,7 +26,17 @@ const songSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Album",
         required: false,
-    }
+    },
+    audioCloudinaryId: {
+        type: String,
+        defaule: null,
+        required: true,
+    },
+    imageCloudinaryId: {
+        type: String,
+        default: null,
+        required: true,
+    },
 }, { timestamps: true });
 
 
