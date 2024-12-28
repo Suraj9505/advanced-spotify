@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useMusicStore } from '@/stores/useMusicStore'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Calendar, Music, Trash2 } from 'lucide-react';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 const AlbumTable = () => {
 
-    const { albums, fetchStats, deleteAlbum, isAlbumsLoading } = useMusicStore();
+    const { albums, deleteAlbum } = useMusicStore();
 
     // useEffect(() => {
     //     fetchStats();
