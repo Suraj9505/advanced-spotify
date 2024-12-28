@@ -26,20 +26,20 @@ const LeftSidebar = () => {
                     <Link to={"/"} className={cn(buttonVariants(
                         {
                             variant: "ghost",
-                            className: `w-full hover:bg-zinc-800 text-white justify-start ${route.pathname === "/" ? "bg-emerald-600" : ""}`
+                            className: `w-full hover:bg-zinc-800 text-white justify-center ${route.pathname === "/" ? "bg-emerald-600" : ""}`
                         }
                     ))}>
-                        <HomeIcon className='mr-2 size-5' />
+                        <HomeIcon className='size-5' />
                         <span className='hidden md:inline'>Home</span>
                     </Link>
                     <SignedIn>
                         <Link to={"/chat"} className={cn(buttonVariants(
                             {
                                 variant: "ghost",
-                                className: `w-full hover:bg-zinc-800 text-white justify-start ${route.pathname === "/chat" ? "bg-emerald-600" : ""}`
+                                className: `w-full hover:bg-zinc-800 text-white justify-center ${route.pathname === "/chat" ? "bg-emerald-600" : ""}`
                             }
                         ))}>
-                            <MessageCircle className='mr-2 size-5' />
+                            <MessageCircle className=' size-5' />
                             <span className='hidden md:inline'>Messages</span>
                         </Link>
                     </SignedIn>
