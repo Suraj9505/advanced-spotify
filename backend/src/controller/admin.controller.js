@@ -18,34 +18,44 @@ const uploadToCloudinary = async (file) => {
 
 export const createSong = async (req, res, next) => {
     try {
-        if (!req.files || !req.files.audioFile || !req.files.imageFile) {
-            return res.status(400).json({ message: "Please upload all files" });
+        if (!req.files || !req.files.audioFile ) {
+            return res.status(400).json({ message: "Please upload audio files" });
         }
 
         const { title, artist, albumId, duration } = req.body;
         const audioFile = req.files.audioFile;
         const imageFile = req.files.imageFile;
 
-        // Validate file types
-        const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-        const allowedAudioTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav'];
+        let imageUrl;
+        let imageCloudinaryId = null;
 
-        if (!allowedImageTypes.includes(imageFile.mimetype)) {
-            return res.status(400).json({ message: "Invalid cover file type. Only image files are allowed." });
+        // image uploading and fallback
+        if(imageFile){
+            const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+
+            if (!allowedImageTypes.includes(imageFile.mimetype)) {
+                return res.status(400).json({ message: "Invalid cover file type. Only image files are allowed." });
+            }
+
+            const imageUpload = await uploadToCloudinary(imageFile);
+             imageUrl = imageUpload.secure_url;
+             imageCloudinaryId = imageUpload.public_id;
         }
+        else {
+            imageUrl = "/music_placeholder.png"
+        }
+        const allowedAudioTypes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/m4a', 'audio/ogg'];
 
+
+
+        // audio uploading
         if (!allowedAudioTypes.includes(audioFile.mimetype)) {
             return res.status(400).json({ message: "Invalid audio file type. Only audio files are allowed." });
         }
-
-        // Upload files to Cloudinary (or any other storage service)
         const audioUpload = await uploadToCloudinary(audioFile);
-        const imageUpload = await uploadToCloudinary(imageFile);
 
         const audioUrl = audioUpload.secure_url;
-        const imageUrl = imageUpload.secure_url;
 
-        // Create a new song and store the public_ids for deletion later
         const song = new Song({
             title,
             artist,
@@ -54,7 +64,7 @@ export const createSong = async (req, res, next) => {
             duration,
             albumId: albumId || null,
             audioCloudinaryId: audioUpload.public_id, // Store the public_id for the audio
-            imageCloudinaryId: imageUpload.public_id, // Store the public_id for the image
+            imageCloudinaryId: imageCloudinaryId, // Store the public_id for the image
         });
 
         await song.save();
@@ -116,14 +126,14 @@ export const deleteSong = async (req, res, next) => {
 export const createAlbum = async (req, res, next) => {
     try {
         const { title, artist, releaseYear } = req.body;
-        const { imageFile } = req.files;
+        const { imageFile } = req.files || {};
+
+        let imageUrl;
+        let imageCloudinaryId = null;
 
         // Validate image file
-        if (!imageFile) {
-            return res.status(400).json({ message: "Please upload an image file for the album." });
-        }
-
-        // Validate image file type
+        if (imageFile) {
+            // Validate image file type
         const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
         if (!allowedImageTypes.includes(imageFile.mimetype)) {
             return res.status(400).json({ message: "Invalid image file type. Only JPEG, PNG, JPG, and WEBP are allowed." });
@@ -131,7 +141,12 @@ export const createAlbum = async (req, res, next) => {
 
         // Upload the image to Cloudinary
         const imageUpload = await uploadToCloudinary(imageFile);
-        const imageUrl = imageUpload.secure_url; // Get the secure URL of the uploaded image
+        imageUrl = imageUpload.secure_url; // Get the secure URL of the uploaded image
+        imageCloudinaryId = imageUpload.public_id;
+        }
+        else{
+            imageUrl = "/album_placeholder.png"
+        }
 
         // Create a new album and store the public_id for deletion later
         const album = new Album({
@@ -139,7 +154,7 @@ export const createAlbum = async (req, res, next) => {
             artist,
             imageUrl,
             releaseYear,
-            imageCloudinaryId: imageUpload.public_id, // Store the public_id for the image
+            imageCloudinaryId: imageCloudinaryId, // Store the public_id for the image
         });
 
         await album.save(); // Save the album to the database

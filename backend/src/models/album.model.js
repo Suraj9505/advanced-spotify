@@ -21,7 +21,6 @@ const albumSchema = new mongoose.Schema({
     imageCloudinaryId: {
         type: String,
         default: null,
-        required: true,
     },
     songs: [
         { type: mongoose.Schema.Types.ObjectId, ref: "Song" }

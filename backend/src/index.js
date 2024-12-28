@@ -5,8 +5,10 @@ import fileupload from 'express-fileupload';
 import path from 'path';
 import cors from 'cors';
 import { createServer } from 'http';
-import { initializeSocket } from './lib/socket.js';
+import fs from 'fs';
+import cron from 'node-cron';
 
+import { initializeSocket } from './lib/socket.js';
 import { connectDB } from './lib/db.js';
 
 import userRoute from './routes/user.route.js';
@@ -41,12 +43,36 @@ app.use(fileupload({
     }
 }));
 
+// cron jobs
+const tmpDir = path.join(process.cwd(), "tmp");
+
+cron.schedule("0 * * * *", () => {
+    if(fs.existsSync(tmpDir)) {
+        fs.readDir(tmpDir, (err, files) => {
+            if(err){
+                console.log("error", err);
+                return;
+            }
+            for(const file of files){
+                fs.unlink(path.join(tmpDir, file), (err) => {});
+            }
+        })
+    }
+})
+
 app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/songs", songRoute);
 app.use("/api/albums", albumRoute);
 app.use("/api/stats", statRoute);
+
+if(process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+    })
+}
 
 // error handler
 app.use((err, req, res, next)=> {

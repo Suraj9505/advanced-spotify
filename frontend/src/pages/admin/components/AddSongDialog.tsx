@@ -42,8 +42,8 @@ const AddSongDialog = () => {
         setIsLoading(true);
 
         try {
-            if (!files.audio || !files.image) {
-                return toast.error("Please upload both audio and image files");
+            if (!files.audio) {
+                return toast.error("Please upload audio file");
             }
 
             const formData = new FormData();
@@ -56,7 +56,12 @@ const AddSongDialog = () => {
             }
 
             formData.append("audioFile", files.audio);
-            formData.append("imageFile", files.image);
+            if(files.image) {
+                formData.append("imageFile", files.image);
+            }
+            else{
+                formData.append("imageFile", "");
+            }
 
             await addSong(formData);
 

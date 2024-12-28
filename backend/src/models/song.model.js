@@ -35,7 +35,6 @@ const songSchema = new mongoose.Schema({
     imageCloudinaryId: {
         type: String,
         default: null,
-        required: true,
     },
 }, { timestamps: true });
 

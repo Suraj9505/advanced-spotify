@@ -32,16 +32,22 @@ const AddAlbumDialog = () => {
         setIsLoading(true);
 
         try {
-            if (!imageFile) {
-                return toast.error("Please upload image file");
-            }
+            // if (!imageFile) {
+            //     return toast.error("Please upload image file");
+            // }
 
             const formData = new FormData();
 
             formData.append("title", newAlbum.title);
             formData.append("artist", newAlbum.artist);
             formData.append("releaseYear", newAlbum.releaseYear.toString());
-            formData.append("imageFile", imageFile);
+
+            if(imageFile){
+                formData.append("imageFile", imageFile);
+            }
+            else{
+                formData.append("imageFile", "");
+            }
 
             await addAlbum(formData);
 
@@ -134,7 +140,7 @@ const AddAlbumDialog = () => {
 					<Button
 						onClick={handleSubmit}
 						className='bg-violet-500 hover:bg-violet-600 text-zinc-300'
-						disabled={isLoading || !imageFile || !newAlbum.title || !newAlbum.artist}
+						disabled={isLoading || !newAlbum.title || !newAlbum.artist}
 					>
 						{isLoading ? "Creating..." : "Add Album"}
 					</Button>
