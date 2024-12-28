@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { SignedIn } from '@clerk/clerk-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import PlaylistSkeleton from '@/components/skeletons/PlaylistSkeleton'
+import AlbumSkeleton from '@/components/skeletons/AlbumSkeleton'
 import { useMusicStore } from '@/stores/useMusicStore'
 
 const LeftSidebar = () => {
@@ -51,13 +51,13 @@ const LeftSidebar = () => {
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center text-white px-2">
                         <Library className="size-5 mr-2" />
-                        <span className='hidden md:inline'>Playlists</span>
+                        <span className='hidden md:inline'>Albums</span>
                     </div>
                 </div>
                 <ScrollArea className='h-[calc(100vh-300px)] '>
                     <div className='space-y-2'>
                         {isAlbumsLoading ? (
-                            <PlaylistSkeleton />
+                            <AlbumSkeleton />
                         ) : (
                             albums.map((album) => (
                                 <Link to={`/album/${album._id}`} key={album._id} className={`flex items-center p-2 gap-3 group cursor-pointer  rounded-md ${route.pathname === `/album/${album._id}` ? "bg-emerald-600 " : "hover:bg-emerald-600"}`}>

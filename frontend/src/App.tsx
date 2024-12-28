@@ -8,6 +8,8 @@ import MainLayout from "./layout/MainLayout"
 import ChatPage from "./pages/chat/ChatPage"
 import AlbumPage from "./pages/album/AlbumPage"
 import AdminPage from "./pages/admin/AdminPage"
+import PageNotFound from "./pages/extra/PageNotFound"
+import ComingSoon from "./pages/extra/ComingSoon"
 
 
 function App() {
@@ -24,7 +26,10 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/chat" element={<ChatPage />} />
                     <Route path="/album/:albumId" element={<AlbumPage />} />
+                    <Route path="/playlists" element={<ComingSoon />} />
+                    <Route path="/playlist/:playlistId" element={<ComingSoon />} />
                 </Route>
+                    <Route path="*" element={<PageNotFound />} />
             </Routes>
 
             <Toaster />

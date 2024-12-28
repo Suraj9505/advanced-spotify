@@ -3,31 +3,35 @@ import { useChatStore } from "@/stores/useChatStore"
 import { useUser } from "@clerk/clerk-react";
 import Topbar from "@/components/Topbar";
 import UsersList from "./components/UsersList";
+import ChatHeader from "./components/ChatHeader";
+import ChatContainer from "./components/ChatContainer";
+import ChatInput from "./components/ChatInput";
 
 const ChatPage = () => {
     const { user } = useUser();
-   const { messages, selectedUser, fetchUsers, fetchMessages } = useChatStore();
+   const { selectedUser, fetchUsers } = useChatStore();
 
    useEffect(() => {
     if(user) fetchUsers();
    }, [fetchUsers, user]);
 
-   useEffect(()=> {
-    if(selectedUser) fetchMessages(selectedUser.clerkId);
-   }, [])
 
 
   return (
     <main className="h-full rounded-lg bg-gradient-to-b from-zinc-800 to-zinc-900 overflow-hidden">
         <Topbar />
 
-        <div className="grid lg:grid-cols-[300px_1fr] grid-cols-[80px_1fr] h-[calc(100vh-180px)]">
+        <div className="grid lg:grid-cols-[250px_1fr] grid-cols-[80px_1fr] h-[calc(100vh-180px)]">
             <UsersList />
 
             {/* chat message */}
             <div className="flex flex-col h-full">
                 {selectedUser ? (
-                    "selected user"
+                    <>
+                        <ChatHeader />
+                        <ChatContainer/>
+                        <ChatInput />
+                    </>
                 ) : (
                     <NoConversationPlaceholder />
                 )}
