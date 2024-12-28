@@ -21,7 +21,6 @@ const HomePage = () => {
       const { initializeQueue } = usePlayerStore();
 
       const [greeting, setGreeting] = useState('');
-      const currentHour = new Date().getHours();
 
       const calculateGreeting = () => {
         const currentHour = new Date().getHours();
