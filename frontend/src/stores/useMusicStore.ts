@@ -7,6 +7,7 @@ interface MusicStore {
     albums: Album[];
     songs: Song[];
     stats: Stats;
+    favorites: Song[];
     isAllSongsLoading: boolean;
     isStatsLoading: boolean;
     isSongsLoading: boolean;
@@ -25,17 +26,21 @@ interface MusicStore {
     fetchMadeForYouSongs: () => Promise<void>;
     fetchTrendingSongs: () => Promise<void>;
     fetchFeaturedSongs: () => Promise<void>;
+    fetchFavorites: () => Promise<void>;
     fetchStats: () => Promise<void>;
     fetchSongs: () => Promise<void>;
     deleteSong: (id: string) => Promise<void>;
     deleteAlbum: (id: string) => Promise<void>;
     addSong: (formData: any) => Promise<void>;
     addAlbum: (formData: any) => Promise<void>;
+    addToFavorites: (song: Song) => Promise<void>;
+    removeFromFavorites: (song: Song) => Promise<void>;
 }
 
 export const useMusicStore = create<MusicStore>((set) => ({
     albums: [],
     songs: [],
+    favorites: [],
     stats: {
         totalAlbums: 0,
         totalSongs: 0,
@@ -126,6 +131,16 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
         } finally {
             set({isFeaturedLoading: false});
+        }
+    },
+
+    fetchFavorites: async () => {
+        try {
+            const response = await axiosInstance.get("/users/favorites");
+            set({favorites: response.data});
+
+        } catch (error:any) {
+            toast.error(error)
         }
     },
 
@@ -235,6 +250,35 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
         } catch (error:any) {
             toast.error("Error adding Album", error);
+        }
+    },
+
+    addToFavorites: async( song) => {
+        try {
+            await axiosInstance.post(`/users/favorite/${song._id}`, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            set((state) => ({
+                favorites: [...state.favorites, song]
+            }))
+            toast.success("Song addeed to favourites");
+
+        } catch (error: any) {
+            toast.error(error.response.data.message);
+        }
+    },
+
+    removeFromFavorites: async (song) => {
+        try {
+            await axiosInstance.delete(`/users/favorite/${song._id}`);
+            set((state) => ({
+                favorites: state.favorites.filter((fav) => fav._id !== song._id),
+              }));
+            toast.success("Song removed from favourites");
+        } catch (error: any) {
+            toast.error(error.response.data.message);
         }
     }
 }));

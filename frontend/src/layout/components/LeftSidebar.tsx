@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 import { Link, useLocation } from 'react-router-dom'
-import { HomeIcon, MessageCircle, Library } from 'lucide-react'
+import { HomeIcon, MessageCircle, Library, Heart } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import { SignedIn } from '@clerk/clerk-react'
@@ -41,6 +41,15 @@ const LeftSidebar = () => {
                         ))}>
                             <MessageCircle className=' size-5' />
                             <span className='hidden md:inline'>Messages</span>
+                        </Link>
+                        <Link to={"/favourites"} className={cn(buttonVariants(
+                            {
+                                variant: "ghost",
+                                className: `w-full hover:bg-zinc-800 text-white justify-center md:justify-start ${route.pathname === "/favourites" ? "bg-emerald-600" : ""}`
+                            }
+                        ))}>
+                            <Heart className=' size-5' />
+                            <span className='hidden md:inline'>Favourites</span>
                         </Link>
                     </SignedIn>
                 </div>

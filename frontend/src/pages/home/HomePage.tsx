@@ -6,21 +6,25 @@ import FeaturedSection from './components/FeaturedSection';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SectionGrid from './components/SectionGrid';
 import { usePlayerStore } from '@/stores/usePlayerStore';
+import { useUser } from '@clerk/clerk-react';
 
 const HomePage = () => {
     const {
         fetchFeaturedSongs,
         fetchMadeForYouSongs,
         fetchTrendingSongs,
+        fetchFavorites,
         isMadeForYouLoading,
         isTrendingLoading,
         madeForYouSongs,
+        favorites,
         featuredSongs,
         trendingSongs } = useMusicStore();
 
       const { initializeQueue } = usePlayerStore();
 
       const [greeting, setGreeting] = useState('');
+      const user = useUser();
 
       const calculateGreeting = () => {
         const currentHour = new Date().getHours();
@@ -47,6 +51,7 @@ const HomePage = () => {
         fetchFeaturedSongs();
         fetchMadeForYouSongs();
         fetchTrendingSongs();
+        if(user.isSignedIn) fetchFavorites();
     }, [fetchFeaturedSongs, fetchMadeForYouSongs, fetchTrendingSongs]);
 
     useEffect(() => {
@@ -59,7 +64,7 @@ const HomePage = () => {
         }, 60 * 1000); // Check every 60 seconds
 
         return () => clearInterval(interval); // Cleanup interval on unmount
-    }, []);
+    }, [favorites]);
 
     return (
         <main className='overflow-hidden h-full'>

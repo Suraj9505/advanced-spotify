@@ -63,15 +63,15 @@ const AlbumPage = () => {
 
           {/* content */}
           <div className="relative z-10">
-            <div className="flex p-6 gap-6 pb-8">
+            <div className="flex flex-col sm:flex-row p-6 gap-6 pb-8">
               <img
                 src={currentAlbum?.imageUrl}
                 alt={currentAlbum?.title}
-                className="w-[240px] h-[240px] shadow-xl rounded"
+                className="w-[100%] h-[180px] sm:w-[180px] md:h-[180px] lg:h-[240px] lg:w-[240px] shadow-xl rounded"
               />
               <div className="flex flex-col justify-end">
                 <p className="text-sm font-medium">Album</p>
-                <h1 className="text-7xl font-bold my-4">
+                <h1 className="text-2xl sm:text-5xl lg:text-7xl font-bold my-4">
                   {currentAlbum?.title}
                 </h1>
                 <div className="flex items-center gap-2 text-sm text-zinc-100">

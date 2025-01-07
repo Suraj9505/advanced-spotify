@@ -14,6 +14,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    favorites: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Song",
+        default: [],
+    },
 }, { timestamps: true });
 
 

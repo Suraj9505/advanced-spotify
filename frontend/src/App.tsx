@@ -10,6 +10,7 @@ import AlbumPage from "./pages/album/AlbumPage"
 import AdminPage from "./pages/admin/AdminPage"
 import PageNotFound from "./pages/extra/PageNotFound"
 import ComingSoon from "./pages/extra/ComingSoon"
+import FavoritesPage from "./pages/favorites/FavoritesPage"
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/chat" element={<ChatPage />} />
+                    <Route path="/favourites" element={<FavoritesPage />} />
                     <Route path="/album/:albumId" element={<AlbumPage />} />
                     <Route path="/playlists" element={<ComingSoon />} />
                     <Route path="/playlist/:playlistId" element={<ComingSoon />} />
